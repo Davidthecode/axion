@@ -1,6 +1,6 @@
 # API Documentation
 
-Base URL: `http://localhost:5111`
+Base URL: `https://axion-p658.onrender.com` (Live) or `http://localhost:5111` (Local)
 
 All routes follow the Axion pattern: `POST|GET|PATCH|DELETE /api/:module/:method`
 

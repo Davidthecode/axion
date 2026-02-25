@@ -2,6 +2,8 @@
 
 Built on the [Axion](https://github.com/qantra-io/axion) template. This API manages schools, classrooms, and students with strictly enforced multi-tenancy.
 
+**Live URL**: [https://axion-p658.onrender.com](https://axion-p658.onrender.com)
+
 ## Setup
 
 **Prerequisites**: Node.js, MongoDB, Redis (required by the Axion core).
