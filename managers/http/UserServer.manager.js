@@ -1,32 +1,45 @@
-const http              = require('http');
-const express           = require('express');
-const cors              = require('cors');
-const app               = express();
+const http = require('http');
+const express = require('express');
+const cors = require('cors');
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
+const app = express();
 
 module.exports = class UserServer {
-    constructor({config, managers}){
-        this.config        = config;
-        this.userApi       = managers.userApi;
+    constructor({ config, managers }) {
+        this.config = config;
+        this.userApi = managers.userApi;
     }
-    
+
     /** for injecting middlewares */
-    use(args){
+    use(args) {
         app.use(args);
     }
 
     /** server configs */
-    run(){
-        app.use(cors({origin: '*'}));
+    run() {
+        app.use(helmet());
+        app.use(cors({ origin: '*' }));
         app.use(express.json());
-        app.use(express.urlencoded({ extended: true}));
+        app.use(express.urlencoded({ extended: true }));
         app.use('/static', express.static('public'));
+
+        /** rate limiter  */
+        const limiter = rateLimit({
+            windowMs: 15 * 60 * 1000,
+            max: 100,
+            standardHeaders: true,
+            legacyHeaders: false,
+        });
+
+        app.use('/api/', limiter);
 
         /** an error handler */
         app.use((err, req, res, next) => {
             console.error(err.stack)
             res.status(500).send('Something broke!')
         });
-        
+
         /** a single middleware to handle all */
         app.all('/api/:moduleName/:fnName', this.userApi.mw);
 
